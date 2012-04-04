@@ -1,0 +1,364 @@
+
+import javax.swing.*;
+import java.awt. *;
+import javax.swing.BoxLayout;
+import org.javascool.widgets.IconOutput; 
+import org.javascool.proglets.codagePixels.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.awt.event. *;
+
+int N = 250;
+JButton sauver = new JButton("Sauver l'image");
+JTextField jtfNombrea = new JTextField("1");
+JTextField jtfNombreb = new JTextField("1");
+JTextField jtfNombrec = new JTextField("41");
+JButton reinitialiser = new JButton("R�initialiser");
+//JTextField pointCoordonneesx = new JTextField("0");
+//JTextField pointCoordonneesy = new JTextField("0");
+//JTextField pointValeur = new JTextField("0");
+JLabel labelpointCoordonneesx = new JLabel("i = 0");
+JLabel labelpointCoordonneesy = new JLabel("j = 0");
+JLabel labelpointValeur = new JLabel("Valeur = 0");
+String nomFichierImage = "image.bmp";
+GestionClic gc = new GestionClic();
+MouseEventImage gmc = new MouseEventImage();
+JPanel conteneurImage = new JPanel();
+IconOutput image = new IconOutput();
+int tableau [][] = new int [N][N];
+
+// http://www.siteduzero.com/tutoriel-3-10550-les-champs-de-texte-l-objet-jtextfield.html
+// http://ww3.ac-poitiers.fr/math/prof/objets/Ulam.htm
+
+
+static public boolean save(BufferedImage src,String location) {
+	try {
+	  ImageUtils.saveImage(location, src);
+	  return true;
+	} catch(Exception e) {
+	  System.out.println("Erreur � la sauvegarde de l'image dans '"+location+"' : "+e);
+	  return false;
+	}
+  }
+
+
+class GestionClic implements ActionListener {
+   public void actionPerformed(ActionEvent e) {
+      if (e.getSource() == sauver) {
+      	save(image.getImage(), nomFichierImage);
+      } 
+     if (e.getSource() == jtfNombrea) {
+      	filtre(tableau, N, creeListe(-1000, 1000, Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText())), 0, 255, 0, image, false);
+      	filtre(tableau, N, creeListe(-1000, 1000, Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText())), 255, 0, 0, image, true);
+      } 
+     if (e.getSource() == jtfNombreb) {
+      	filtre(tableau, N, creeListe(-1000, 1000, Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText())), 0, 255, 0, image, false);
+		filtre(tableau, N, creeListe(-1000, 1000, Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText())), 255, 0, 0, image, true);
+      } 
+     if (e.getSource() == jtfNombrec) {
+      	filtre(tableau, N, creeListe(-1000, 1000, Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText())), 0, 255, 0, image, false);
+		filtre(tableau, N, creeListe(-1000, 1000, Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText())), 255, 0, 0, image, true);
+      }
+      if (e.getSource() == reinitialiser){
+      	image.reset(N, N);
+      	creeSpirale(tableau, N, 0, 0, 0, image);
+      	filtre(tableau, N, listeZero(), 0, 0, 255, image, false);
+      }
+   }
+}
+
+/*
+class mouseClicked(MouseEvent e) {
+   public void actionPerformed(ActionEvent e) {
+   	      if (e.getSource() == image){
+      	println("coucou");
+      }
+   }
+}*/
+
+
+public class MouseEventImage implements MouseListener {
+     public void mousePressed(MouseEvent e) {
+       //saySomething("Mouse pressed; # of clicks: " + e.getClickCount(), e);
+    }
+
+    public void mouseReleased(MouseEvent e) {
+       //saySomething("Mouse released; # of clicks: " + e.getClickCount(), e);
+    }
+
+    public void mouseEntered(MouseEvent e) {
+       //saySomething("Mouse entered", e);
+    }
+
+    public void mouseExited(MouseEvent e) {
+       //saySomething("Mouse exited", e);
+    }
+
+    public void mouseClicked(MouseEvent e) {
+		int largeur = image.getWidth();
+		int hauteur = image.getHeight();
+		int zoom = 500/N;
+		int coinx = (largeur-zoom*N)/2;
+		int coiny = (hauteur-zoom*N)/2;
+       int a = (e.getX() - coinx)/zoom;
+       int b = N-((e.getY() - coiny)/zoom + 1);
+       if ( a >= 0 & a < N & b >= 0 & b < N){
+       labelpointCoordonneesx.setText("i = " + a + " ");
+       labelpointCoordonneesy.setText("j = " + b + " ");
+       labelpointValeur.setText("Valeur = " + tableau[a][b]);
+       //println(image.getWidth()); 
+       }
+    }
+
+    void saySomething(String eventDescription, MouseEvent e) {
+        //textArea.append(eventDescription + " detected on " + e.getComponent().getClass().getName() + "." + newline);
+    }
+}
+
+void spiraleUlam(int N){
+	//JFrame panneau = new JFrame("Spirale de Ulam");
+	JLayeredPane panneau = getPane();
+	panneau.setSize(N,N);
+	panneau.removeAll();
+	panneau.setBackground(Color.WHITE);
+	//panneau.setBackground(java.awt.Color.WHITE);
+	
+	panneau.setLayout(new BoxLayout(panneau, BoxLayout.PAGE_AXIS));
+	//panneau.add(sauver);
+	Box boite = Box.createHorizontalBox();
+	boite.setBackground(Color.WHITE);
+	sauver.setBackground(Color.WHITE);
+	sauver.addActionListener(gc);
+	boite.add(sauver);
+	panneau.add(boite);
+	
+	
+	
+     tableau = tableau_image(N);
+     //image.clear;
+     image.setBackground(Color.WHITE);
+     image.setSize(N,N); // Obligatoire ???
+    	image.reset(N, N, true);
+
+	creeSpirale(tableau, N, 0, 0, 0, image);
+	filtre(tableau, N, listeZero(), 0, 0, 255, image, false);
+	
+	//filtre(tableau, N, creeListe(0, 1000, 1, 1, 17), 255, 0, 0, image);
+	//panneau.add(image);
+	conteneurImage.add(image);
+	conteneurImage.setBackground(Color.WHITE);
+	panneau.add(conteneurImage);
+    	image.addMouseListener(gmc);
+
+	jtfNombrea.addActionListener(gc);
+	jtfNombreb.addActionListener(gc);
+	jtfNombrec.addActionListener(gc);
+     JLabel labelNombrea = new JLabel("a = ");
+     JLabel labelNombreb = new JLabel("b = ");
+     JLabel labelNombrec = new JLabel("c = ");
+     JPanel bas1 = new JPanel();
+     bas1.setBackground(Color.WHITE);
+
+        Font police = new Font("Arial", Font.BOLD, 14);
+        jtfNombrea.setFont(police);
+        jtfNombrea.setPreferredSize(new Dimension(50, 30));
+        jtfNombrea.setForeground(Color.BLUE);
+        jtfNombreb.setFont(police);
+        jtfNombreb.setPreferredSize(new Dimension(50, 30));
+        jtfNombreb.setForeground(Color.BLUE);
+        jtfNombrec.setFont(police);
+        jtfNombrec.setPreferredSize(new Dimension(50, 30));
+        jtfNombrec.setForeground(Color.BLUE);
+        bas1.add(labelNombrea);
+        bas1.add(jtfNombrea);
+        bas1.add(labelNombreb);
+        bas1.add(jtfNombreb);
+        bas1.add(labelNombrec);
+        bas1.add(jtfNombrec);
+     panneau.add(bas1);
+
+     JPanel bas2 = new JPanel();
+     bas2.setBackground(Color.WHITE);
+     bas2.add(reinitialiser);
+     reinitialiser.addActionListener(gc);
+     panneau.add(bas2);
+
+     JPanel bas3 = new JPanel();
+     bas3.setBackground(Color.WHITE);
+     bas3.add(labelpointCoordonneesx);
+     bas3.add(labelpointCoordonneesy);
+     bas3.add(labelpointValeur);
+     panneau.add(bas3);
+     //panneau.setVisible(true);
+     //panneau.setResizable(false);
+
+}
+
+boolean premier(int n) {
+   if (n <= 3) return  n == 2 || n == 3;
+   if (n % 2 == 0) return  false;
+   for (int i = 3; i * i <= n; i += 2) {
+      if (n % i == 0) {
+         return  false;
+      }
+   }
+   return  true;
+}
+
+boolean entierSecondDegre(int n, int a, int b, int c) {
+   boolean resultat = false;
+   for (int i = 0; i < 2 * n; i ++) {
+      if (n == a * i * i + b * i + c) {
+         resultat = true;
+      }
+   }
+   return  resultat;
+}
+
+int f (int n, int a, int b, int c){
+	return a*n*n + b*n + c;
+}
+
+ArrayList < Integer > creeListe(int debut, int fin, int a, int b, int c) {
+   ArrayList < Integer > liste = new ArrayList < Integer > ();
+   for (int i = debut; i <= fin; i ++) {
+      liste.add(f(i, a, b, c));
+   }
+   return liste;
+}
+
+ArrayList < Integer > listeNombresPremiers(int debut, int fin) {
+   ArrayList < Integer > liste = new ArrayList < Integer > ();
+   for (int i = debut; i <= fin; i ++) {
+      if(premier(i)){
+      liste.add(i);
+      }
+   }
+   return liste;
+}
+
+ArrayList < Integer > listeNombresPremiersFoisDeux(int debut, int fin) {
+   ArrayList < Integer > liste = new ArrayList < Integer > ();
+   for (int i = debut; i <= fin; i ++) {
+      if(premier(i)){
+      	int j = 2*i;
+      liste.add(j);
+      }
+   }
+   return liste;
+}
+
+ArrayList < Integer > listeZero() {
+   ArrayList < Integer > liste = new ArrayList < Integer > ();
+   liste.add(0);
+   return liste;
+}
+
+
+boolean entierSecondDegreListe(int n, ArrayList < Integer > listeEntiers) {
+   return  listeEntiers.contains(n);
+}
+
+int[][] tableau_image(int N){
+   int xposition = 0;
+   int yposition = 0;
+   int entier = 1;
+   int pas = 1;
+   int a = 1;
+   int b = 1;
+   int c = 41;
+	int tableau [][] = new int [N][N];
+	if (N % 2 == 0){
+   	xposition = N/2-1;
+   	yposition = N/2-1;
+   }
+   else{
+   	xposition = (N-1)/2;
+   	yposition = (N-1)/2;
+   }
+   tableau[0][0] = 0;
+   while (pas < N ) {
+      for (int k = 0; k < pas; k ++) {
+         xposition = xposition + 1;
+         tableau[xposition][yposition] = f(entier, a, b, c); 
+         entier = entier + 1;
+      }
+      for (int k = 0; k < pas; k ++) {
+         yposition = yposition + 1;
+         tableau[xposition][yposition] = f(entier, a, b, c); 
+         entier = entier + 1;
+      }
+      pas = pas + 1;
+      if (pas < N){
+      for (int k = 0; k < pas; k ++) {
+         xposition = xposition - 1;
+         tableau[xposition][yposition] = f(entier, a, b, c); 
+         entier = entier + 1;
+      }
+      for (int k = 0; k < pas; k ++) {
+         yposition = yposition - 1;
+         tableau[xposition][yposition] = f(entier, a, b, c); 
+         entier = entier + 1;
+      }
+      pas = pas + 1;
+      }
+   }
+   if (N % 2 == 0){
+   	 for (int k = 0; k < pas - 1  ; k ++) {
+         xposition = xposition - 1;
+         tableau[xposition][yposition] = entier; 
+         entier = entier + 1;
+      }
+   }
+	else{
+   	 for (int k = 0; k < pas - 1 ; k ++) {
+         xposition = xposition + 1;
+         tableau[xposition][yposition] = entier; 
+         entier = entier + 1;
+      }
+   }
+   
+	
+	return tableau;
+}
+
+	void placePoint(IconOutput image, int x, int y, int nombre, int r, int v, int b) {
+      image.set(x, y, new Color(r,v,b));
+}
+
+void creeSpirale(int[][] t, int N, int r, int v, int b, IconOutput image){
+	for (int i = 0; i<N; i++){
+	for(int j = 0; j<N; j++){
+		if(premier(t[i][j])){
+		placePoint(image, i, N-j-1, t[i][j], r, v, b);
+		}
+	}
+}
+}
+
+void filtre(int[][] t, int N, ArrayList < Integer > liste, int r, int v, int b, IconOutput image, boolean estPremier){
+	if (estPremier){
+	for (int i = 0; i<N; i++){
+	for(int j = 0; j<N; j++){
+		if(premier(t[i][j]) & liste.contains(t[i][j])){
+		placePoint(image, i, N-j-1, t[i][j], r, v, b);
+		}
+	}
+}
+}
+else {
+for (int i = 0; i<N; i++){
+	for(int j = 0; j<N; j++){
+		if(liste.contains(t[i][j])){
+		placePoint(image, i, N-j-1, t[i][j], r, v, b);
+		}
+	}
+}
+}
+}
+
+
+	
+void main(){
+	spiraleUlam(N);
+}
