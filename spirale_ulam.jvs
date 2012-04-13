@@ -6,85 +6,109 @@ import org.javascool.widgets.IconOutput;
 import java.awt.image.BufferedImage;
 import org.javascool.proglets.codagePixels.ImageUtils;
 
-// Bouton pour sauver l'image
+// Bouton pour sauver l'image et nom du fichier
 	JButton sauver = new JButton("Sauver l'image");
-// Menu pour le choix du type de suite que l'on veut reprÃ©senter, une propriÃ©tÃ© y est automatiquement associÃ©e
-	String[] typeSuite = { "Entiers naturels", "Suite M", "Suite F"};
+	String cheminFichierImage = "IciLeChemin\\";
+	String nomFichier = cheminFichierImage + "images\\image.png";
+
+// Menu pour le choix du type de suite que l'on veut représenter, une propriété y est automatiquement associée
+	String[] typeSuite = { "Entiers naturels", "Suite M", "Suite F", "Perso"};
 	JComboBox typeSuiteListe = new JComboBox(typeSuite);
+
 // Labels et zone de texte pour le choix des coordonnees du centre de l'image	
-	JLabel labelCentrex = new JLabel("CoordonnÃ©es du centre : x = ");
+	JLabel labelCentrex = new JLabel("Coordonnées du centre : x = ");
 	JLabel labelCentrey = new JLabel(" y = ");
 	JTextField jtfCentrex = new JTextField("0");
 	JTextField jtfCentrey = new JTextField("0");
-// L'image en elle mÃªme !		
+
+// L'image en elle même !		
 	Image image = new Image();
-// Affiche la frÃ©quence des nombres vÃ©rifiant la propriÃ©tÃ© choisie avec la suite
-	JLabel labelFrequence = new JLabel("FrÃ©quence");
-// Choix des coefficients a, b et c pour afficher les nombres de la forme an^2+bn+c
-     JLabel labelNombreForme = new JLabel("Nombres de la forme an^2+bn+c");
+
+// Chaînes de caractères pour afficher les féquences
+	String frequence = "Fréquence = ";
+	String frequenceSousSuite = "  Fréquence de la sous suite= ";
+
+// Affiche la fréquence des nombres vérifiant la propriété choisie avec la suite ainsi que de la sous suite
+	JLabel labelFrequence = new JLabel(frequence);
+	JLabel labelFrequencePartiel = new JLabel(frequenceSousSuite);
+
+// Choix des coefficients a, b et c pour afficher la suite des nombres de la forme an^2+bn+c
+     JLabel labelSuiteNombreForme = new JLabel("Nombres de la forme an^2+bn+c, où  ");
+	JTextField jtfSuiteNombrea = new JTextField("0");
+	JTextField jtfSuiteNombreb = new JTextField("1");
+	JTextField jtfSuiteNombrec = new JTextField("0");
+     JLabel labelSuiteNombrea = new JLabel("a = ");
+     JLabel labelSuiteNombreb = new JLabel("b = ");
+     JLabel labelSuiteNombrec = new JLabel("c = ");
+
+
+// Choix des coefficients a, b et c pour afficher la sous suite donnée par les indices an^2+bn+c
+     JLabel labelNombreForme = new JLabel("Sous suite d'indices an^2+bn+c");
 	JTextField jtfNombrea = new JTextField("1");
 	JTextField jtfNombreb = new JTextField("1");
 	JTextField jtfNombrec = new JTextField("41");
      JLabel labelNombrea = new JLabel("a = ");
      JLabel labelNombreb = new JLabel("b = ");
      JLabel labelNombrec = new JLabel("c = ");
-// Choix de l'intervalle pour n et les nombres prÃ©cÃ©dents
+
+// Choix de l'intervalle pour n et les nombres précédents
      JLabel labelVariationNombre1 = new JLabel("pour n allant de ");
-     JLabel labelVariationNombre2 = new JLabel("Ã ");
+     JLabel labelVariationNombre2 = new JLabel("à ");
 	JTextField jtfNombreDebutIntervalle = new JTextField("0");
 	JTextField jtfNombreFinIntervalle = new JTextField("1000");
-// Pour rÃ©initialiser l'image
-	JButton reinitialiser = new JButton("RÃ©initialiser");
-// Panneau qui contient les Ã©lÃ©ments prÃ©cÃ©dents
+
+// Pour réinitialiser l'image
+	JButton reinitialiser = new JButton("Réinitialiser");
+
+// Panneau qui contient les éléments précédents
 	JLayeredPane panneau = getPane();
+
 // Choix de la police de caractÃ¨re pour les zones de texte modifiables
 	Font police = new Font("Arial", Font.BOLD, 14);
+
 // Gestion des zones de texte modifiables
 	GestionClic gc = new GestionClic();
 
-	
-	/*JLabel labelDimension = new JLabel("Dimension : ");
-	JTextField jtfDimension = new JTextField("256");*/
-//	MouseEventImage gmc = new MouseEventImage();
-//	JLabel labelpointCoordonneesx = new JLabel("i = 0");
-//	JLabel labelpointCoordonneesy = new JLabel("j = 0");
-//	JLabel labelpointValeur = new JLabel("Valeur = 0");
-
-
+// Pour calculer la suite F
+//	ArrayList<Integer> listeF = new ArrayList<Integer>();
 
 public class Spirale extends JFrame{
 	public Spirale(){
-		int n1 = 700;
-		int n2 = 256;
-		int largeur = n1;
+		// Constantes de dimensions, modifiable dans le code
+		int largeur = 700;
 		int hauteur = 800;
-		int largeurImage = n2;
-		int hauteurImage = n2;
+		int largeurImage = 512;
+		int hauteurImage = largeurImage;
+		
+		// Titre de la fenêtre
 		setTitle("Spirales de nombres");
+		
+		// Position initiale de la fenêtre
 		setLocationRelativeTo(null);
+		
+		// Taille de la fenêtre
 		setSize(largeur,hauteur);
+		
+		// Couleur de fond de la fenêtre et on met le contenu à zéro
 		image.setBackground(Color.WHITE);
 		panneau.removeAll();
+		
+		// Disposition verticale et centrale des éléments dans la fenêtre
 		panneau.setLayout(new BoxLayout(panneau, BoxLayout.PAGE_AXIS));
 
-		sauver.addActionListener(gc);
-		//panneau.add(sauver);
-
+		// Prenier ligne d'éléments : haut 1
 		JPanel haut1 = new JPanel();
+		
+		// Le premier c'est sauver l'image et écoute du bouton		
+		sauver.addActionListener(gc);
 		haut1.add(sauver);
-		//haut1.add(labelDimension);
-		/*jtfDimension.setFont(police);
-          jtfDimension.setPreferredSize(new Dimension(50, 30));
-          jtfDimension.setForeground(Color.BLUE);
-          jtfDimension.addActionListener(gc);
-		haut1.add(jtfDimension);*/
-		//panneau.add(haut1);
 
+		// Affichage et écoute du choix du type de suite
 		typeSuiteListe.setSelectedIndex(0);
 		typeSuiteListe.addActionListener(gc);
-		//JPanel haut2 = new JPanel();
 		haut1.add(typeSuiteListe);
-
+		
+		// Affichage et écoute du choix des coordonnées du centre de l'image
 		haut1.add(labelCentrex);
 		jtfCentrex.setFont(police);
           jtfCentrex.setPreferredSize(new Dimension(50, 30));
@@ -97,39 +121,61 @@ public class Spirale extends JFrame{
           jtfCentrey.setForeground(Color.BLUE);
           jtfCentrey.addActionListener(gc);
 		haut1.add(jtfCentrey);
-
+		
+		// On rajoute la premiére ligne dans le conteneur panneau
 		panneau.add(haut1);
 
+		// Choix des coefficients de la suite donnée par an^2+bn+c à placer
+		JPanel suiteabc = new JPanel();
+		suiteabc.setBackground(Color.WHITE);
+		jtfSuiteNombrea.setFont(police);
+          jtfSuiteNombrea.setPreferredSize(new Dimension(50, 30));
+          jtfSuiteNombrea.setForeground(Color.BLUE);
+          jtfSuiteNombreb.setFont(police);
+          jtfSuiteNombreb.setPreferredSize(new Dimension(50, 30));
+          jtfSuiteNombreb.setForeground(Color.BLUE);
+          jtfSuiteNombrec.setFont(police);
+          jtfSuiteNombrec.setPreferredSize(new Dimension(50, 30));
+          jtfSuiteNombrec.setForeground(Color.BLUE);
+         
+          jtfSuiteNombrea.addActionListener(gc);
+          jtfSuiteNombrea.addKeyListener(new ClavierListener()); 
+		jtfSuiteNombreb.addActionListener(gc);
+          jtfSuiteNombreb.addKeyListener(new ClavierListener()); 
+		jtfSuiteNombrec.addActionListener(gc);
+          jtfSuiteNombrec.addKeyListener(new ClavierListener()); 
 
+		suiteabc.add(labelSuiteNombreForme);
+          suiteabc.add(labelSuiteNombrea);
+          suiteabc.add(jtfSuiteNombrea);
+          suiteabc.add(labelSuiteNombreb);
+          suiteabc.add(jtfSuiteNombreb);
+          suiteabc.add(labelSuiteNombrec);
+          suiteabc.add(jtfSuiteNombrec);
+	     panneau.add(suiteabc);
+
+		// Contruction et placement de l'image
 		image.setImage(largeurImage, hauteurImage, true, 1, 1, 1, 0, 10000);
-		//image.setCentre(1000,1000);
 		image.setCentre(0,0);
 		image.fonction.setabc(0, 1, 0);
 		image.fonctionPartiel.setabc(1, 1, 41);
-		//image.fonction.setabc(1, 1, 41);
-		//println(this.getWidth());
-		//image.reset(500,500, true);
-		//image.creeSpirale( (int) (largeur-500)/2,(int) (hauteur-500)/2);
 		image.creeSpirale();
-		//image.filtre();
-		//image.save();
-		//println(image.frequence());
 		panneau.add(image);
 
-
-		//println(image.getWidth());
-		//image.set(250, 250, new Color(255, 0, 0));
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		// Affichage des féquences de la suite et de la sous suite
 		JPanel basFrequence = new JPanel();
-		labelFrequence.setText("Frequence = " + image.frequence());
+		labelFrequence.setText(frequence + image.frequence());
 		basFrequence.add(labelFrequence);
+		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
+		basFrequence.add(labelFrequencePartiel);
 		panneau.add(basFrequence);
 
+		// Label de titre pour les sous suites
 		JPanel bas1Titre = new JPanel();
 		bas1Titre.add(labelNombreForme);
 		panneau.add(bas1Titre);
 		
+		//Choix des coefficients des sous suites données par an^2+bn+c
      	JPanel bas1 = new JPanel();
 		bas1.setBackground(Color.WHITE);
 		jtfNombrea.setFont(police);
@@ -147,14 +193,13 @@ public class Spirale extends JFrame{
 		jtfNombreFinIntervalle.setFont(police);
           jtfNombreFinIntervalle.setPreferredSize(new Dimension(50, 30));
           jtfNombreFinIntervalle.setForeground(Color.BLUE);
-
           
           jtfNombrea.addActionListener(gc);
-          jtfNombrea.addKeyListener(new ClavierListener()); ///////////////////
+          jtfNombrea.addKeyListener(new ClavierListener()); 
 		jtfNombreb.addActionListener(gc);
-          jtfNombreb.addKeyListener(new ClavierListener()); ///////////////////
+          jtfNombreb.addKeyListener(new ClavierListener()); 
 		jtfNombrec.addActionListener(gc);
-          jtfNombrec.addKeyListener(new ClavierListener()); ///////////////////
+          jtfNombrec.addKeyListener(new ClavierListener()); 
 		jtfNombreDebutIntervalle.addActionListener(gc);
 		jtfNombreFinIntervalle.addActionListener(gc);
 
@@ -170,40 +215,44 @@ public class Spirale extends JFrame{
           bas1.add(jtfNombreFinIntervalle);
 	     panneau.add(bas1);
 
-	     //JPanel bas3 = new JPanel();
-		//bas3.
-
+		// Bouton pour réinitialiser l'image
 	     JPanel bas2 = new JPanel();
 	     bas2.setBackground(Color.WHITE);
      	bas2.add(reinitialiser);
 	     reinitialiser.addActionListener(gc);
      	panneau.add(bas2);
 		
+		// Placement du conteneur dans la fenêtre
 		add(panneau);
+		
+		// La taille de la fenêtre n'est pas modifiable
 		setResizable(false);
+		
+		// On affiche la fenêtre
 		setVisible(true);
 
-		for (int i=1; i<200; i++){
+		// Exemples de création de vidéos
+		/*for (int i=1; i<200; i++){
 			image.creeSpirale();
 			image.fonctionPartiel.setabc(1, 1, i);
 			image.filtre();
 			image.fonctionPartiel.setabc(1, 1, -i);
 			image.filtre();
 			if (i < 10){
-			image.setNom("image-00" + i + ".png");
+			image.setNom(cheminFichierImage + "image-00" + i + ".png");
 					}
 			if (10 <= i && i < 100){
-			image.setNom("image-0" + i + ".png");
+			image.setNom(cheminFichierImage + "image-0" + i + ".png");
 					}					
 			if (100 <= i && i < 1000){
-			image.setNom("image-" + i + ".png");
+			image.setNom(cheminFichierImage + "image-" + i + ".png");
 					}					
 			image.save();
-		}
+		}*/
 
-      		/*image.setTypeFonction(2);
-      		image.setTypePropriete(2);
-		for (int i=0; i<100; i++){
+      	/*	image.setTypeFonction(1);
+      		image.setTypePropriete(1);
+		for (int i=0; i<200; i++){
 			image.fonction.setabc(0, 1, i);
 			image.creeSpirale();
 			//image.fonctionPartiel.setabc(1, 1, i);
@@ -211,198 +260,269 @@ public class Spirale extends JFrame{
 			//image.fonctionPartiel.setabc(1, 1, -i);
 			//image.filtre();
 			if (i < 100){
-			image.setNom("Chemin\\image-002-00" + i + ".png");
+			image.setNom(cheminFichierImage + "image-00" + i + ".png");
 					}
 			if (10 <= i && i < 100){
-			image.setNom("Chemin\\image-002-0" + i + ".png");
+			image.setNom(cheminFichierImage + "image-0" + i + ".png");
 					}					
 			if (100 <= i && i < 1000){
-			image.setNom("Chemin\\image-002-" + i + ".png");
+			image.setNom(cheminFichierImage + "image-" + i + ".png");
 					}					
 			image.save();
 		}*/
 
+      	/*	image.setTypeFonction(1);
+      		image.setTypePropriete(1);
+		for (int i=0; i<200; i++){
+			//image.fonction.setabc(0, 1, i);
+			image.creeSpirale();
+			image.fonctionPartiel.setabc(4, i, 0);
+			image.filtre();
+			//image.fonctionPartiel.setabc(1, 1, -i);
+			//image.filtre();
+			if (i < 100){
+			image.setNom(cheminFichierImage + "image-00" + i + ".png");
+					}
+			if (10 <= i && i < 100){
+			image.setNom(cheminFichierImage + "image-0" + i + ".png");
+					}					
+			if (100 <= i && i < 1000){
+			image.setNom(cheminFichierImage + "image-" + i + ".png");
+					}					
+			image.save();
+		}*/
+		
+		/*	image.setTypeFonction(4);
+      		image.setTypePropriete(1);
+		for (int i=1; i<400; i++){
+			image.creeSpirale();
+			image.fonction.setabc(0, i, 1);
+			jtfSuiteNombrea.setText(Long.toString(image.fonction.a));
+			jtfSuiteNombreb.setText(Long.toString(image.fonction.b));
+			jtfSuiteNombrec.setText(Long.toString(image.fonction.c));
+			if (i < 10){
+			image.setNom(cheminFichierImage + "image-00" + i + ".png");
+					}
+			if (10 <= i && i < 100){
+			image.setNom(cheminFichierImage + "image-0" + i + ".png");
+					}					
+			if (100 <= i && i < 1000){
+			image.setNom(cheminFichierImage + "image-" + i + ".png");
+					}					
+			image.save();
+		}*/
+		
+		/*	image.setTypeFonction(4);
+      		image.setTypePropriete(1);
+		for (int i=1; i<400; i++){
+			image.creeSpirale();
+			image.fonction.setabc(0, i, 0);
+			jtfSuiteNombrea.setText(Long.toString(image.fonction.a));
+			jtfSuiteNombreb.setText(Long.toString(image.fonction.b));
+			jtfSuiteNombrec.setText(Long.toString(image.fonction.c));
+			if (i < 10){
+			image.setNom(cheminFichierImage + "image-00" + i + ".png");
+					}
+			if (10 <= i && i < 100){
+			image.setNom(cheminFichierImage + "image-0" + i + ".png");
+					}					
+			if (100 <= i && i < 1000){
+			image.setNom(cheminFichierImage + "image-" + i + ".png");
+					}					
+			image.save();
+		}*/
+
+		/*	image.setTypeFonction(4);
+      		image.setTypePropriete(3);
+		for (int i=1; i<400; i++){
+			image.creeSpirale();
+			//image.fonction.setabc(0, 50, 100*i);
+			//image.fonction.setabc(0, i, 1);  // 0015
+			image.fonction.setabc(0, 11, 200*i);  // 0016
+			jtfSuiteNombrea.setText(Long.toString(image.fonction.a));
+			jtfSuiteNombreb.setText(Long.toString(image.fonction.b));
+			jtfSuiteNombrec.setText(Long.toString(image.fonction.c));
+			if (i < 10){
+			image.setNom(cheminFichierImage + "image-00" + i + ".png");
+					}
+			if (10 <= i && i < 100){
+			image.setNom(cheminFichierImage + "image-0" + i + ".png");
+					}					
+			if (100 <= i && i < 1000){
+			image.setNom(cheminFichierImage + "image-" + i + ".png");
+					}					
+			image.save();
+		}*/
+
+
 }
 }
 
-	class GestionClic implements ActionListener {
+
+// Gestion des champs de texte
+class GestionClic implements ActionListener {
    public void actionPerformed(ActionEvent e) {
       if (e.getSource() == sauver) {
-      	image.save(); //save(image.getImage(), image.nom);
+      	image.save(); 
       } 
-     /*if (e.getSource() == jtfDimension) {
-     	//image.setBackground(Color.WHITE);
-     	image.setImage(Integer.parseInt(jtfDimension.getText()), Integer.parseInt(jtfDimension.getText()));
-     	//image.setCentre(0,0);
-     	println("coucou");
-     	image.creeSpirale();
-      } */
-     if (e.getSource() == jtfCentrex) {
+     if (e.getSource() == jtfCentrex || e.getSource() == jtfCentrey) {
      	image.setCentre(Integer.parseInt(jtfCentrex.getText()),Integer.parseInt(jtfCentrey.getText()));
      	image.creeSpirale();
-     	labelFrequence.setText("Frequence = " + image.frequence());
-      } 
-     if (e.getSource() == jtfCentrey) {
-     	image.setCentre(Integer.parseInt(jtfCentrex.getText()),Integer.parseInt(jtfCentrey.getText()));
-     	image.creeSpirale();
-     	labelFrequence.setText("Frequence = " + image.frequence());
+     	labelFrequence.setText(frequence + image.frequence());
       } 
       if (e.getSource() == typeSuiteListe) {
       	JComboBox cb = (JComboBox)e.getSource();
       	String suiteNom = (String)cb.getSelectedItem();
-      	//updateLabel(suiteNom);
       	if (suiteNom == "Entiers naturels"){
       		image.setTypeFonction(1);
       		image.setTypePropriete(1);
       		image.creeSpirale();
-      		labelFrequence.setText("Frequence = " + image.frequence());
-      		//println(image.frequence());
-      		//println(suiteNom);
+      		labelFrequence.setText(frequence + image.frequence());
       	}
       	if (suiteNom == "Suite M"){
       		image.setTypeFonction(2);
       		image.setTypePropriete(2);
-      		//println(image.typePropriete);
 			image.creeSpirale();
-			labelFrequence.setText("Frequence = " + image.frequence());
-			//image.filtre();
-			//println(image.frequence());
-			//println(suiteNom);
+			labelFrequence.setText(frequence + image.frequence());
       	}
       	if (suiteNom == "Suite F"){
       		image.setTypeFonction(3);
       		image.setTypePropriete(1);
-      		//println(image.typePropriete);
+ 			image.creeSpirale();
+			labelFrequence.setText(frequence + image.frequence());
+      	}
+      	if (suiteNom == "Perso"){
+      		image.setTypeFonction(4);
+      		image.setTypePropriete(1);
 			image.creeSpirale();
-			labelFrequence.setText("Frequence = " + image.frequence());
-			//image.filtre();
-			//println(image.frequence());
-			//println(suiteNom);
+			labelFrequence.setText(frequence + image.frequence());
       	}
       }
 
-     if (e.getSource() == jtfNombrea) {
-     	image.setIntervalle(Integer.parseInt(jtfNombreDebutIntervalle.getText()), Integer.parseInt(jtfNombreFinIntervalle.getText()));
-     	image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()));
-     	image.filtre();
+     if (e.getSource() == jtfSuiteNombrea || e.getSource() == jtfSuiteNombreb || e.getSource() == jtfSuiteNombrec) {
+     	image.fonction.setabc(Integer.parseInt(jtfSuiteNombrea.getText()), Integer.parseInt(jtfSuiteNombreb.getText()), Integer.parseInt(jtfSuiteNombrec.getText()));
+     	image.creeSpirale();
+    		labelFrequence.setText(frequence + image.frequence());
+    		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
       } 
-     if (e.getSource() == jtfNombreb) {
+     if (e.getSource() == jtfNombrea || e.getSource() == jtfNombreb || e.getSource() == jtfNombrec || e.getSource() == jtfNombreDebutIntervalle || e.getSource() == jtfNombreFinIntervalle) {
      	image.setIntervalle(Integer.parseInt(jtfNombreDebutIntervalle.getText()), Integer.parseInt(jtfNombreFinIntervalle.getText()));
      	image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()));
      	image.filtre();
+    		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
       } 
-     if (e.getSource() == jtfNombrec) {
-     	image.setIntervalle(Integer.parseInt(jtfNombreDebutIntervalle.getText()), Integer.parseInt(jtfNombreFinIntervalle.getText()));
-     	image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()));
-     	image.filtre();
-      }
-     if (e.getSource() == jtfNombreDebutIntervalle) {
-     	image.setIntervalle(Integer.parseInt(jtfNombreDebutIntervalle.getText()), Integer.parseInt(jtfNombreFinIntervalle.getText()));
-     	image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()));
-     	image.filtre();
-      }
-     if (e.getSource() == jtfNombreFinIntervalle) {
-     	image.setIntervalle(Integer.parseInt(jtfNombreDebutIntervalle.getText()), Integer.parseInt(jtfNombreFinIntervalle.getText()));
-     	image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()));
-     	image.filtre();
-      }
       if (e.getSource() == reinitialiser){
       	image.creeSpirale();
       }
    }
-	}
-
-public class MouseEventImage implements MouseListener {
-     public void mousePressed(MouseEvent e) {
-       //saySomething("Mouse pressed; # of clicks: " + e.getClickCount(), e);
-    }
-
-    public void mouseReleased(MouseEvent e) {
-       //saySomething("Mouse released; # of clicks: " + e.getClickCount(), e);
-    }
-
-    public void mouseEntered(MouseEvent e) {
-       //saySomething("Mouse entered", e);
-    }
-
-    public void mouseExited(MouseEvent e) {
-       //saySomething("Mouse exited", e);
-    }
-
-    public void mouseClicked(MouseEvent e) {
-	/*	int largeur = image.getWidth();
-		int hauteur = image.getHeight();
-		int N= 500;
-		int zoom = 500/N;
-		int coinx = (largeur-zoom*N)/2;
-		int coiny = (hauteur-zoom*N)/2;
-       int a = (e.getX() - coinx)/zoom;
-       int b = N-((e.getY() - coiny)/zoom + 1);
-       if ( a >= 0 & a < N & b >= 0 & b < N){
-       labelpointCoordonneesx.setText("i = " + a + " ");
-       labelpointCoordonneesy.setText("j = " + b + " ");
-       //labelpointValeur.setText("Valeur = " + tableau[a][b]);
-       //println(image.getWidth()); /
-       }*/
-    }
-
-    void saySomething(String eventDescription, MouseEvent e) {
-        //textArea.append(eventDescription + " detected on " + e.getComponent().getClass().getName() + "." + newline);
-    }
 }
 
+// Gestion des flèches su clavier pour augmenter ou diminuer les paramètres
 class ClavierListener implements KeyListener{
     	
 		public void keyPressed(KeyEvent event) {
-			// println("Code touche pressÃ©e : " + event.getKeyCode() + " - caractÃ¨re touche pressÃ©e : " + event.getKeyChar());
+			// println("Code touche pressée : " + event.getKeyCode() + " - caractère touche pressée : " + event.getKeyChar());
+			if (event.getKeyCode() == 38 && event.getSource() == jtfSuiteNombrea){
+     		image.fonction.setabc(Integer.parseInt(jtfSuiteNombrea.getText()) + 1, Integer.parseInt(jtfSuiteNombreb.getText()), Integer.parseInt(jtfSuiteNombrec.getText()));
+     		jtfSuiteNombrea.setText(Integer.toString(Integer.parseInt(jtfSuiteNombrea.getText()) + 1));
+     		image.creeSpirale();
+	     	labelFrequence.setText(frequence + image.frequence());
+    	     	labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
+			}
+			if (event.getKeyCode() == 40 && event.getSource() == jtfSuiteNombrea){
+     		image.fonction.setabc(Integer.parseInt(jtfSuiteNombrea.getText()) - 1, Integer.parseInt(jtfSuiteNombreb.getText()), Integer.parseInt(jtfSuiteNombrec.getText()));
+     		jtfSuiteNombrea.setText(Integer.toString(Integer.parseInt(jtfSuiteNombrea.getText()) - 1));
+     		image.creeSpirale();
+	     	labelFrequence.setText(frequence + image.frequence());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
+			}
+			if (event.getKeyCode() == 38 && event.getSource() == jtfSuiteNombreb){
+     		image.fonction.setabc(Integer.parseInt(jtfSuiteNombrea.getText()), Integer.parseInt(jtfSuiteNombreb.getText()) + 1, Integer.parseInt(jtfSuiteNombrec.getText()));
+     		jtfSuiteNombreb.setText(Integer.toString(Integer.parseInt(jtfSuiteNombreb.getText()) + 1));
+     		image.creeSpirale();
+	     	labelFrequence.setText(frequence + image.frequence());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
+			}
+			if (event.getKeyCode() == 40 && event.getSource() == jtfSuiteNombreb){
+     		image.fonction.setabc(Integer.parseInt(jtfSuiteNombrea.getText()), Integer.parseInt(jtfSuiteNombreb.getText()) - 1, Integer.parseInt(jtfSuiteNombrec.getText()));
+     		jtfSuiteNombreb.setText(Integer.toString(Integer.parseInt(jtfSuiteNombreb.getText()) - 1));
+     		image.creeSpirale();
+	     	labelFrequence.setText(frequence + image.frequence());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
+			}
+			if (event.getKeyCode() == 38 && event.getSource() == jtfSuiteNombrec){
+     		image.fonction.setabc(Integer.parseInt(jtfSuiteNombrea.getText()), Integer.parseInt(jtfSuiteNombreb.getText()), Integer.parseInt(jtfSuiteNombrec.getText()) + 1);
+     		jtfSuiteNombrec.setText(Integer.toString(Integer.parseInt(jtfSuiteNombrec.getText()) + 1));
+     		image.creeSpirale();
+	     	labelFrequence.setText(frequence + image.frequence());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
+			}
+			if (event.getKeyCode() == 40 && event.getSource() == jtfSuiteNombrec){
+     		image.fonction.setabc(Integer.parseInt(jtfSuiteNombrea.getText()), Integer.parseInt(jtfSuiteNombreb.getText()), Integer.parseInt(jtfSuiteNombrec.getText()) - 1);
+     		jtfSuiteNombrec.setText(Integer.toString(Integer.parseInt(jtfSuiteNombrec.getText()) - 1));
+     		image.creeSpirale();
+	     	labelFrequence.setText(frequence + image.frequence());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
+			}
 			if (event.getKeyCode() == 38 && event.getSource() == jtfNombrea){
 			image.effaceFiltre();
      		image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()) + 1, Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()));
      		jtfNombrea.setText(Integer.toString(Integer.parseInt(jtfNombrea.getText()) + 1));
      		image.filtre();
+	     	labelFrequencePartiel.setText(frequence + image.frequencePartiel());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
 			}
 			if (event.getKeyCode() == 40 && event.getSource() == jtfNombrea){
 			image.effaceFiltre();
      		image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()) - 1, Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()));
      		jtfNombrea.setText(Integer.toString(Integer.parseInt(jtfNombrea.getText()) - 1));
      		image.filtre();
+	     	labelFrequencePartiel.setText(frequence + image.frequencePartiel());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
 			}
 			if (event.getKeyCode() == 38 && event.getSource() == jtfNombreb){
 			image.effaceFiltre();
      		image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()) + 1, Integer.parseInt(jtfNombrec.getText()));
      		jtfNombreb.setText(Integer.toString(Integer.parseInt(jtfNombreb.getText()) + 1));
      		image.filtre();
+	     	labelFrequencePartiel.setText(frequence + image.frequencePartiel());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
 			}
 			if (event.getKeyCode() == 40 && event.getSource() == jtfNombreb){
 			image.effaceFiltre();
      		image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()) - 1, Integer.parseInt(jtfNombrec.getText()));
      		jtfNombreb.setText(Integer.toString(Integer.parseInt(jtfNombreb.getText()) - 1));
      		image.filtre();
+	     	labelFrequencePartiel.setText(frequence + image.frequencePartiel());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
 			}
 			if (event.getKeyCode() == 38 && event.getSource() == jtfNombrec){
 			image.effaceFiltre();
      		image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()) + 1);
      		jtfNombrec.setText(Integer.toString(Integer.parseInt(jtfNombrec.getText()) + 1));
      		image.filtre();
+	     	labelFrequencePartiel.setText(frequence + image.frequencePartiel());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
 			}
 			if (event.getKeyCode() == 40 && event.getSource() == jtfNombrec){
 			image.effaceFiltre();
      		image.fonctionPartiel.setabc(Integer.parseInt(jtfNombrea.getText()), Integer.parseInt(jtfNombreb.getText()), Integer.parseInt(jtfNombrec.getText()) - 1);
      		jtfNombrec.setText(Integer.toString(Integer.parseInt(jtfNombrec.getText()) - 1));
      		image.filtre();
+	     	labelFrequencePartiel.setText(frequence + image.frequencePartiel());
+     		labelFrequencePartiel.setText(frequenceSousSuite + image.frequencePartiel());
 			}
 		}
 
 		public void keyReleased(KeyEvent event) {
-			//println("Code touche relÃ¢chÃ©e : " + event.getKeyCode() + " - caractÃ¨re touche relÃ¢chÃ©e : " + event.getKeyChar());			
 						
 		}
 
 		public void keyTyped(KeyEvent event) {
-			//println("Code touche tapÃ©e : " + event.getKeyCode() + " - caractÃ¨re touche tapÃ©e : " + event.getKeyChar());
 		}    	
     }    	
 
+// Objet image
 public class Image extends IconOutput{
 	String nom;
 	int typeFonction;
@@ -410,9 +530,9 @@ public class Image extends IconOutput{
 	int typePropriete;
 	int dimensionx;
 	int dimensiony;
-	int centrex;
-	int centrey;
-	int frequence;
+	long centrex;
+	long centrey;
+	double frequence;
 	int debutIntervalle;
 	int finIntervalle;
 	Fonction fonction;
@@ -431,7 +551,7 @@ public class Image extends IconOutput{
 		debutIntervalle = intervallea;
 		finIntervalle = intervalleb;
 		reset(dimensionx,dimensiony, zoom);
-		nom = "Chemin\\image.png";
+		nom = nomFichier;
 		typeFonction = type1;
 		typePropriete = type2;
 		typeFonctionPartiel = type3;
@@ -465,14 +585,14 @@ public class Image extends IconOutput{
 	public void setTypePropriete(int n){
 		typePropriete = n;
 	}
-	public void setCentre(int x, int y){
+	public void setCentre(long x, long y){
 		centrex = x;
 		centrey = y;
 	}
 
 	public double frequence(){
-		int nombreTotal;
-		int nombreVerifiantPropriete;
+		long nombreTotal;
+		long nombreVerifiantPropriete;
 		nombreTotal = dimensionx * dimensiony;
 		nombreVerifiantPropriete = 0;
 		for (int i=0; i < dimensionx; i++){
@@ -482,30 +602,43 @@ public class Image extends IconOutput{
 					}
 			}
 		}
+		if (nombreTotal == 0) return 0;
 		return (double) nombreVerifiantPropriete/nombreTotal;
 	}
-	public void creeSpirale(){
-		//set(250, 250, new Color(255, 0, 0));
-		//set(250, 250, couleurPropriete);
-		//println(dimensionx);
-		//println(dimensiony);
-		int nombre;
-		int coinx = coinBasGauche(centrex, centrey, dimensionx, dimensiony)[0];
-		int coiny = coinBasGauche(centrex, centrey, dimensionx, dimensiony)[1];
-		//println(coinx);
-		//println(coiny);
-		int dimMoitiex = dimMoitie(dimensionx, dimensiony)[0];
-		int dimMoitiey = dimMoitie(dimensionx, dimensiony)[1];
-		//println(dimMoitiex);
-		//println(dimMoitiey);
-//		set( dimMoitiex, dimMoitiey, couleurCentre);
+	
+	public double frequencePartiel(){
+		long nombreTotal;
+		long nombreVerifiantPropriete;
+		nombreTotal = 0;
+		nombreVerifiantPropriete = 0;
 		for (int i=0; i < dimensionx; i++){
 			for (int j=0; j < dimensiony; j++){
-				int coordonneex = coinx + i;
-				int coordonneey = coiny + j;
+					if (getPixelColor(i, j) == couleurProprietePartiel){
+						nombreTotal = nombreTotal + 1;
+						nombreVerifiantPropriete = nombreVerifiantPropriete + 1;
+					}
+					if (getPixelColor(i, j) == couleurNonProprietePartiel){
+						nombreTotal = nombreTotal + 1;
+					}
+			}
+		}
+		if (nombreTotal == 0) return 0;
+		return (double) nombreVerifiantPropriete/nombreTotal;
+	}
+	
+	public void creeSpirale(){
+		long nombre;
+		long coinx = coinBasGauche(centrex, centrey, dimensionx, dimensiony)[0];
+		long coiny = coinBasGauche(centrex, centrey, dimensionx, dimensiony)[1];
+		int dimMoitiex = dimMoitie(dimensionx, dimensiony)[0];
+		int dimMoitiey = dimMoitie(dimensionx, dimensiony)[1];
+		long heureDebut = System.currentTimeMillis();
+		long heureFin;
+		for (int i=0; i < dimensionx; i++){
+			for (int j=0; j < dimensiony; j++){
+				long coordonneex = coinx + i;
+				long coordonneey = coiny + j;
 				nombre = fonction.fonctionCalcule(typeFonction, coordonneesValeur(coordonneex, coordonneey));
-				//println(nombre);
-//				nombre = coordonneesValeur(i - centrex,j - centrey);
 				if (proprieteNombre(typePropriete, nombre)){
 					set( i, dimensiony -1  - j , couleurPropriete);
 				}else{
@@ -513,26 +646,24 @@ public class Image extends IconOutput{
 				}
 			}
 		}
-				//set(dimMoitiex, dimensiony -1  - dimMoitiey, couleurCentre);
+		heureFin = System.currentTimeMillis();
+		println((heureFin - heureDebut) + "ms");
 	}
 
 	public void filtre(){
-		int[] ij = new int[2];
-		int nombre, i, j;
-		int dimMoitiex = dimMoitie(dimensionx, dimensiony)[0];
-		int dimMoitiey = dimMoitie(dimensionx, dimensiony)[1];
-		for (int k = debutIntervalle; k < finIntervalle; k++){
+		int i, j;
+		long[] ij = new long[2];
+		long nombre;
+		long dimMoitiex = dimMoitie(dimensionx, dimensiony)[0];
+		long dimMoitiey = dimMoitie(dimensionx, dimensiony)[1];
+		for (long k = debutIntervalle; k < finIntervalle; k++){
 			ij = valeurCoordonnees(fonctionPartiel.fonctionCalcule(typeFonctionPartiel, k));
 			nombre = coordonneesValeur(ij[0], ij[1]);
 			nombre = image.fonction.fonctionCalcule(typeFonction, nombre);
-			//nombre = image.fonctionPartiel.fonctionCalcule(typeFonction, nombre);
-			i = ij[0] + dimMoitiex - centrex;
-			j = ij[1] + dimMoitiey - centrey;
+			i = (int) (ij[0] + (long) dimMoitiex - (long) centrex);
+			j = (int) (ij[1] + (long) dimMoitiey - (long) centrey);
 			if ( 0 <= i && i < dimensionx && 0 <= j && j < dimensiony){
-				//println(ij[0]);
-				//println(ij[1]);
 			if (proprieteNombre(typePropriete, nombre)){
-				//println(nombre);
 				set( i, dimensiony -1  - j , couleurProprietePartiel);
 			}else{
 				set( i, dimensiony -1  - j , couleurNonProprietePartiel);
@@ -540,6 +671,7 @@ public class Image extends IconOutput{
 			}
 		}
 	}
+
 
 	public void effaceFiltre(){
 		for (int i = 0; i < dimensionx; i++) {
@@ -560,30 +692,31 @@ public class Image extends IconOutput{
 	  ImageUtils.saveImage(nom, getImage());
 	  return true;
 	} catch(Exception e) {
-	  System.out.println("Erreur Ã  la sauvegarde de l'image dans '"+nom+"' : "+e);
+	  System.out.println("Erreur à  la sauvegarde de l'image dans '"+nom+"' : "+e);
 	  return false;
 	}
   }
 }
 
+// Classe fonction qui permet de changer de suite
 public class Fonction{
-	int a;
-	int b;
-	int c;
-	public Fonction(int coeffa, int coeffb, int coeffc){
+	long a;
+	long b;
+	long c;
+	public Fonction(long coeffa, long coeffb, long coeffc){
 		a = coeffa;
 		b = coeffb;
 		c = coeffc;
 	}
 	public Fonction(){
 	}	
-	public void setabc(int coeffa, int coeffb, int coeffc){
+	public void setabc(long coeffa, long coeffb, long coeffc){
 		a = coeffa;
 		b = coeffb;
 		c = coeffc;		
 	}
-	public int fonctionCalcule(int typeFonction, int n){
-		int valeurRetour = 0;
+	public long fonctionCalcule(long typeFonction, long n){
+		long valeurRetour = 0;
 		if (typeFonction == 1){
 			valeurRetour = f(n, a, b, c);
 		}
@@ -593,42 +726,47 @@ public class Fonction{
 		if (typeFonction == 3){
 			valeurRetour = suiteF(f(n, a, b, c));
 		}
+		if (typeFonction == 4){
+			valeurRetour = perso(f(n, a, b, c));
+		}
 		return valeurRetour;
 	}
 }
 
-	public int[] coinBasGauche(int centrex, int centrey, int dimensionx, int dimensiony){
-		int[] coin = new int [2];
-		if (dimensionx % 2 == 0){
-		coin[0] = centrex - ((int) dimensionx/2 -1);
-		}else{
-		coin[0] = centrex - (int) dimensionx/2;
-		}
-		if (dimensiony % 2 == 0){
-		coin[1] = centrey - ((int) dimensiony/2 -1);
-		}else{
-		coin[1] = centrey - (int) dimensiony/2;
-		}
-		return coin;
+// Déterminer les coordonnées du point en bas à droite de l'image
+public long[] coinBasGauche(long centrex, long centrey, long dimensionx, long dimensiony){
+	long[] coin = new long [2];
+	if (dimensionx % 2 == 0){
+	coin[0] = centrex - ((long) dimensionx/2 -1);
+	}else{
+	coin[0] = centrex - (long) dimensionx/2;
 	}
+	if (dimensiony % 2 == 0){
+	coin[1] = centrey - ((long) dimensiony/2 -1);
+	}else{
+	coin[1] = centrey - (long) dimensiony/2;
+	}
+	return coin;
+}
 
-	public int[] dimMoitie(int dimensionx, int dimensiony){
-		int[] dim = new int [2];
-		if (dimensionx % 2 == 0){
+// Permet de déterminer les coordonnées du point centre de l'image
+public int[] dimMoitie(int dimensionx, int dimensiony){
+	int[] dim = new int [2];
+	if (dimensionx % 2 == 0){
 		dim[0] = (int) dimensionx/2 -1;
-		}else{
+	}else{
 		dim[0] = (int) dimensionx/2;
-		}
-		if (dimensiony % 2 == 0){
-		dim[1] = (int) dimensiony/2 -1;
-		}else{
-		dim[1] = (int) dimensiony/2;
-		}
-		return dim;
 	}
+	if (dimensiony % 2 == 0){
+		dim[1] = (int) dimensiony/2 -1;
+	}else{
+		dim[1] = (int) dimensiony/2;
+	}
+	return dim;
+}
 
-
-boolean proprieteNombre(int typePropriete, int n){
+// La propriété de la suite à tester
+boolean proprieteNombre(long typePropriete, long n){
 		boolean propriete = false;
 		if (typePropriete == 1){
 			propriete = estPremier(n);
@@ -636,14 +774,17 @@ boolean proprieteNombre(int typePropriete, int n){
 		if (typePropriete == 2){
 			propriete = !(n == 0);
 		}
+		if (typePropriete == 3){
+			propriete = !(n%3 == 0);
+		}			
 		return propriete;
 	}	
 
-
-boolean estPremier(int n) {
+// Détermine si le nombre n est premier
+boolean estPremier(long n) {
    if (n <= 3) return  n == 2 || n == 3;
    if (n % 2 == 0) return  false;
-   for (int i = 3; i * i <= n; i += 2) {
+   for (long i = 3; i * i <= n; i += 2) {
       if (n % i == 0) {
          return  false;
       }
@@ -651,42 +792,60 @@ boolean estPremier(int n) {
    return  true;
 }
 
-int suiteF(int n){
-	int k;
+// La suite F
+long suiteF(long n){
+	long k;
   if (n == 0)
      return 0;
   if (n == 1)
      return 1;     
   else{
   	if (n % 2 == 0){
-  		return suiteF((int) n/2);
+  		return suiteF((long) n/2);
   	}else{
   		return suiteF(n - 1) + suiteF(n + 1);
   	}  	
   }
 }
 
-int suiteM (int n) {
-	int k;
+
+// La suite M
+long suiteM (long n) {
+	long k;
   if (n == 0)
      return 0;
   else{
-  	k = (int) Math.floor((Math.log(n)) / (Math.log(2)) + 1);
+  	k = (long) Math.floor((Math.log(n)) / (Math.log(2)) + 1);
   	if (k % 2 == 0){
-  		return suiteM((int) pow(2,k)-1-n);
+  		return suiteM((long) pow(2,k)-1-n);
   	}
   	else{
-  		return 1 - suiteM((int) pow(2,k)-1-n);
+  		return 1 - suiteM((long) pow(2,k)-1-n);
   	}
   }
 }
 
-int f (int n, int a, int b, int c){
+// Ici on peut personnaliser sa suite !
+long perso (long n){
+	return (long) Math.floor(Math.sqrt(n));
+	//return (long) Math.floor(Math.log(n)*Math.sqrt(Math.log(n)));
+	//return (long) Math.floor(10*Math.cos(n));
+	//return (long) Math.floor(n*(Math.log(n) + Math.log(Math.log(n))) - 1);
+	//return (long) Math.floor(n*Math.log(2));
+	//return (long) Math.floor(n*Math.exp(2));
+	//return (long) Math.floor((n*167)/17);
+	//return (long) Math.floor(n*Math.PI);
+}
+
+
+// Fonction du second degré de coefficients a, b et c
+long f (long n, long a, long b, long c){
 	return a*n*n + b*n + c;
 }
 
-int coordonneesValeur(int i, int j) {
-   int valeur = 0;
+// Donne la valeur du nombre se trouvant au point de coordonnées (i, j)
+long coordonneesValeur(long i, long j) {
+   long valeur = 0;
    if (i > 0 && - i < j && j <= i) {
       valeur = 4 * i * i - 3 * i + j;
    }
@@ -702,16 +861,17 @@ int coordonneesValeur(int i, int j) {
    return  valeur;
 }
 
-int[] valeurCoordonnees(int valeur) {
-   int[]ij = new int[2];
-   int i = 0;
-   int j = 0;
-   int m = (int) Math.sqrt(valeur);
-   int n;
-   int difference = valeur - m * m;
+// Fonction réciproque de la précédente 
+long[] valeurCoordonnees(long valeur) {
+   long[]ij = new long[2];
+   long i = 0;
+   long j = 0;
+   long m = (long) Math.sqrt(valeur);
+   long n;
+   long difference = valeur - m * m;
    if (valeur > 0) {
       if (m % 2 == 0) {
-         n = (int) m / 2;
+         n = (long) m / 2;
          if (0 <= difference && difference < 2 * n) {
             i = - n;
             j = n - difference;
@@ -721,7 +881,7 @@ int[] valeurCoordonnees(int valeur) {
             j = - n;
          }
       } else {
-         n = (int) (m - 1) / 2;
+         n = (long) (m - 1) / 2;
          if (0 <= difference && difference < 2 * n + 1) {
             i = n + 1;
             j = difference - n;
@@ -736,6 +896,7 @@ int[] valeurCoordonnees(int valeur) {
       ij[1] = j;
    return  ij;
 }
+
 
 void main() {
 	Spirale spirale = new Spirale();
