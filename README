@@ -1,0 +1,12 @@
+Des Zéros et des Uns : spirale
+Un jour où il assistait à une « conférence longue et ennuyeuse », le mathématicien
+Stanislaw Ulam imagina de ranger les nombres entiers en spirale ainsi :
+16 15 14 13 12
+17 4 3 2 11
+18 5 0 1 10
+19 6 7 8 9
+20 21 ...
+La spirale ainsi construite permet de représenter une propriété concernant les entiers
+par un point coloré si la propriété est vraie pour un nombre, ou une absence de point si
+la propriété est fausse. Ulam a appliqué ceci aux nombres premiers et dessiné ainsi la
+figure appelée depuis la spirale d’Ulam.
