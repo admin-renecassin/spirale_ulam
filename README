@@ -10,3 +10,55 @@ La spirale ainsi construite permet de représenter une propriété concernant le
 par un point coloré si la propriété est vraie pour un nombre, ou une absence de point si
 la propriété est fausse. Ulam a appliqué ceci aux nombres premiers et dessiné ainsi la
 figure appelée depuis la spirale d’Ulam.
+
+Mode d'emploi du logiciel :
+
+L'objectif du logiciel est d'afficher la spirale des nombres d'une suite
+$(u_n)$. Une propriété étant choisie, les pixels noirs correspondent aux
+nombres qui vérifient la propriété et les blancs ceux qui ne la
+vérifient pas.
+On peut créer une image seulement avec les termes de la suite d'indices
+$an^2+bn+c$ (en haut dans le logiciel).
+On peut aussi afficher avec d'autres couleurs la sous suite de la suite
+affichée donnée par les termes d'indices $an^2+bn+c$ (en bas dans le
+logiciel).
+
+Il y a 5 possibilités de choix de suites avec leurs propriétés :
+les nombres premiers parmi les nombres naturels,
+les termes non nuls de la suite M,
+les nombres premiers parmi les termes de la suite F,
+les nombres premiers parmi une suite personnalisée dans le code Java ;
+par défaut c'est $E(\sqrt{x})$, où $E$ est la partie entière,
+les nombres premiers parmi une suite dont on peut taper l'expression en
+fonction de n directement dans le logiciel.
+Par défaut ce sont les nombres premiers de la suite des nombres naturels
+qui est affichée.
+
+Le bouton sauver l'image permet de sauver l'image en cours dans le même
+répertoire que le fichier spirale.jar
+
+On peut modifier les coordonnées du centre de l'image soit en modifiant
+les valeurs puis en appuyant sur entrée soit en utilisant les flèches du
+clavier.
+
+On peut modifier la suite en affichant sur toute l'image la sous suite
+d'indices $an^2+bn+c$ (en haut dans le logiciel) soit en modifiant les
+valeurs puis en appuyant sur entrée soit en utilisant les flèches du
+clavier.
+
+On peut choisir une expression explicite quelconque en fonction de n et
+afficher les nombres premiers de la suite choisie.
+
+On peut choisir le temps maximal de calcul si on est impatient et/ou si
+on choisit une grande taille d'image. Celle-ci est fixée à 160x128 dans
+le code Java.
+
+On peut afficher les termes de la sous suite d'indices $an^2+bn+c$ (en
+bas dans le logiciel) de la suite en cours d'affichage soit en modifiant
+les valeurs puis en appuyant sur entrée soit en utilisant les flèches du
+clavier.
+
+Les fréquences des termes (affichés sur l'image) pour la suite et la
+sous suite vérifiant la propriété sont aussi affichées.
+
+On peut réinitialiser l'image, cela supprime l'affichage de la sous suite.
